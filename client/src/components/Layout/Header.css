@@ -1,0 +1,35 @@
+.custom-navbar {
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #007bff;
+}
+
+.nav-link {
+  margin: 0 10px;
+  color: #333;
+  font-size: 1rem;
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+  color: #007bff;
+}
+
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-item {
+  margin-right: 20px;
+}
+
+.badge {
+  background-color: #007bff !important;
+}
