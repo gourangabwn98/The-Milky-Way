@@ -90,9 +90,9 @@ const ProductDetails = () => {
         )}
         <div className="d-flex flex-wrap">
           {relatedProducts?.map((p) => (
-            <div className="card m-2" key={p._id}>
+            <div className="card m-1" key={p._id}>
               <img
-                src={`/api/v1/product/product-photo/${p._id}`}
+                src="/images/product/product.jpg"
                 className="card-img-top"
                 alt={p.name}
               />
