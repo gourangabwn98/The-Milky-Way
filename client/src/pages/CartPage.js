@@ -16,6 +16,7 @@ const CartPage = () => {
   const [instance, setInstance] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  console.log("cart length", cart.length);
 
   //total price
   const totalPrice = () => {
@@ -102,13 +103,13 @@ const CartPage = () => {
             <div className="col-md-7  p-0 m-0">
               {cart?.map((p) => (
                 <div className="row card flex-row" key={p._id}>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <img
-                      src={`/api/v1/product/product-photo/${p._id}`}
+                      src="/images/product/product.jpg"
                       className="card-img-top"
                       alt={p.name}
-                      width="100%"
-                      height={"130px"}
+                      width="90%"
+                      height={"140px"}
                     />
                   </div>
                   <div className="col-md-4">
@@ -137,18 +138,23 @@ const CartPage = () => {
                   <div className="mb-3">
                     <h4>Current Address</h4>
                     <h5>{auth?.user?.address}</h5>
-                    <button
-                      className="btn btn-outline-warning"
-                      onClick={() => navigate("/dashboard/user/profile")}
-                    >
-                      Update Address
-                    </button>
-                    <button
-                      className="btn btn-outline-warning ml-3"
-                      onClick={() => navigate("/gateway")}
-                    >
-                      Payment here
-                    </button>
+                    {cart.length && (
+                      <>
+                        {" "}
+                        <button
+                          className="btn btn-outline-warning"
+                          onClick={() => navigate("/dashboard/user/profile")}
+                        >
+                          Update Address
+                        </button>
+                        <button
+                          className="btn btn-outline-warning ml-3"
+                          onClick={() => navigate("/gateway")}
+                        >
+                          Payment here
+                        </button>
+                      </>
+                    )}
                   </div>
                 </>
               ) : (

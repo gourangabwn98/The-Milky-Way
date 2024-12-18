@@ -33,22 +33,47 @@ const Orders = () => {
 
   return (
     <Layout title={"Your Orders"}>
-      <div className="container-fluid p-3 m-3 dashboard">
+      <div
+        className="container-fluid p-3 m-3 dashboard"
+        style={{
+          backgroundColor: "#f9f9f9",
+          minHeight: "100vh",
+          borderRadius: "8px",
+        }}
+      >
         <div className="row">
           <div className="col-md-3">
             <UserMenu />
           </div>
           <div className="col-md-9">
-            <h1 className="text-center">All Orders</h1>
+            <h1
+              className="text-center"
+              style={{
+                marginBottom: "20px",
+                color: "#333",
+                textDecoration: "underline",
+              }}
+            >
+              All Orders
+            </h1>
             {orders.length > 0 ? (
               orders.map((order, index) => (
-                <div className="border shadow mb-4" key={order._id}>
-                  <table className="table">
+                <div
+                  className="border shadow mb-4 p-3"
+                  key={order._id}
+                  style={{ borderRadius: "8px", backgroundColor: "#fff" }}
+                >
+                  <table className="table" style={{ marginBottom: "15px" }}>
                     <thead>
-                      <tr>
+                      <tr style={{ backgroundColor: "#e9ecef" }}>
                         <th scope="col">Order ID</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Buyer</th>
+                        {auth?.user?._id == 0 && (
+                          <>
+                            <th scope="col">Buyer</th>
+                          </>
+                        )}
+
                         <th scope="col">Date</th>
                         <th scope="col">Payment</th>
                         <th scope="col">Quantity</th>
@@ -57,33 +82,89 @@ const Orders = () => {
                     <tbody>
                       <tr>
                         <td>{order._id}</td>
-                        <td>{order.status}</td>
-                        <td>{order.buyer?.name}</td>
+                        <td
+                          style={{
+                            color:
+                              order.status === "Delivered" ? "green" : "orange",
+                          }}
+                        >
+                          {order.status}
+                        </td>
+                        {auth?.user?._id == 0 && (
+                          <>
+                            {" "}
+                            <td>{order.buyer?.name}</td>
+                          </>
+                        )}
+
                         <td>{moment(order.createdAt).fromNow()}</td>
-                        <td>{order.payment?.success ? "Success" : "Failed"}</td>
+                        <td
+                          style={{
+                            color: order.payment?.status ? "green" : "red",
+                          }}
+                        >
+                          {order.payment?.status ? "Success" : "Failed"}
+                        </td>
                         <td>{order.products?.length}</td>
                       </tr>
                     </tbody>
                   </table>
-                  <div className="container">
+                  <div
+                    className="container"
+                    style={{ padding: "10px", backgroundColor: "#f7f7f7" }}
+                  >
                     {order.products?.map((product, index) => (
                       <div
                         className="row mb-2 p-3 card flex-row"
                         key={product._id}
+                        style={{
+                          border: "1px solid #ddd",
+                          borderRadius: "8px",
+                          marginBottom: "10px",
+                          backgroundColor: "#fff",
+                        }}
                       >
-                        <div className="col-md-4">
+                        <div className="col-md-1">
                           <img
-                            src={`/api/v1/product/product-photo/${product._id}`}
+                            src="/images/product/product.jpg"
                             alt={product.name}
-                            className="card-img-top"
-                            width="100px"
-                            height="100px"
+                            style={{
+                              width: "100%",
+                              height: "100px",
+                              objectFit: "cover",
+                              borderRadius: "8px",
+                              border: "1px solid #ddd",
+                            }}
                           />
                         </div>
                         <div className="col-md-8">
-                          <p>{product.name}</p>
-                          <p>{product.description?.substring(0, 30)}...</p>
-                          <p>Price: ₹{product.price}</p>
+                          <h5
+                            style={{
+                              fontSize: "16px",
+                              fontWeight: "bold",
+                              color: "#333",
+                            }}
+                          >
+                            {product.name}
+                          </h5>
+                          <p
+                            style={{
+                              fontSize: "14px",
+                              color: "#666",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            {product.description?.substring(0, 30)}...
+                          </p>
+                          <p
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Price: ₹{product.price}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -91,7 +172,16 @@ const Orders = () => {
                 </div>
               ))
             ) : (
-              <p>No orders found!</p>
+              <p
+                style={{
+                  textAlign: "center",
+                  marginTop: "50px",
+                  fontSize: "18px",
+                  color: "#666",
+                }}
+              >
+                No orders found!
+              </p>
             )}
           </div>
         </div>

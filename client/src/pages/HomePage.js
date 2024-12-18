@@ -195,7 +195,7 @@ const HomePage = () => {
                 }}
               >
                 <img
-                  src="https://img.freepik.com/free-vector/milk-bottle_1020-433.jpg"
+                  src="/images/product/product.jpg"
                   className="card-img-top"
                   alt={p.name}
                   style={{

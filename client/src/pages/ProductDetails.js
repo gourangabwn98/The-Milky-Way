@@ -5,6 +5,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "../styles/ProductDetailsStyles.css";
 import toast from "react-hot-toast";
 import { useCart } from "../context/cart";
+import BannerSlider from "../components/slider";
 
 const ProductDetails = () => {
   // const location = useLocation();
@@ -49,7 +50,7 @@ const ProductDetails = () => {
       <div className="row container product-details">
         <div className="col-md-6 p-5 border-w">
           <img
-            src="https://img.freepik.com/free-vector/milk-bottle_1020-433.jpg"
+            src="/images/product/product.jpg"
             className="card-img-top"
             alt={product.name}
             height="90%"

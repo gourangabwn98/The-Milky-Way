@@ -9,7 +9,7 @@ import { useCart } from "../../context/cart";
 
 const GatewayPage = () => {
   const [auth] = useAuth();
-  const [cart] = useCart();
+  const [cart, setCart] = useCart();
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
 
@@ -34,24 +34,25 @@ const GatewayPage = () => {
 
     if (cart.length === 0) {
       toast.error("Your cart is empty.");
-      navigate("/cart");
+      navigate("/");
       return;
     }
 
     try {
       // Prepare order data
       const orderData = {
-        products: cart.map((item) => item._id), // Use product IDs from cart
+        products: cart.map((item) => item._id),
         payment: {
-          method: "Credit/Debit Card", // Example, replace with actual payment method
+          method: "Credit/Debit Card",
           amount: total,
+          status: "success", //gateway page is not properlyu created thats why put this
         },
-        buyer: auth?.user?._id, // Authenticated user's ID
+        buyer: auth?.user?._id,
       };
 
       // API call to create the order
       const response = await axios.post(
-        "http://localhost:8080/api/v1/order/create", // Correct backend's API endpoint
+        "http://localhost:8080/api/v1/order/create",
         orderData,
         {
           headers: {
@@ -63,6 +64,13 @@ const GatewayPage = () => {
       // Handle success
       if (response.data) {
         toast.success("Order created successfully!");
+
+        // Clear the cart after successful order creation
+        if (response.data.order.payment.status == "success") {
+          localStorage.removeItem("cart"); // Remove cart items from local storage
+          setCart([]); // Clear cart state
+        }
+
         setTimeout(() => {
           navigate("/dashboard/user/orders"); // Redirect to orders page or confirmation page
         }, 1500);
