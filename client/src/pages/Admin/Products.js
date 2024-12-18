@@ -38,16 +38,26 @@ const Products = () => {
                 className="product-link"
               >
                 <div className="card m-2" style={{ width: "28rem" }}>
-                  <img
+                  {/* <img
                     // src={`/api/v1/product/product-photo/${p._id}`}
-                    src={
-                      p.image
-                        ? p.image
-                        : "https://example.com/images/default.jpg"
-                    }
+                    src="https://img.freepik.com/free-vector/milk-bottle_1020-433.jpg"
                     className="card-img-top"
                     alt={p.name}
-                  />
+                  /> */}
+                  <div>
+                    {/* <img
+                      src="https://img.freepik.com/free-vector/milk-bottle_1020-433.jpg"
+                      className="card-img-top"
+                      alt={p.name}
+                      style={{
+                        border: "1px solid red", // For debugging visibility
+                        width: "100%", // Ensure proper size
+                        height: "auto",
+                      }}
+                    /> */}
+                    <p>sss</p>
+                  </div>
+
                   <div className="card-body">
                     <h5 className="card-title">{p.name}</h5>
                     <p className="card-text">{p.description}</p>

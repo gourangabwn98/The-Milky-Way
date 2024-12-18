@@ -1,0 +1,91 @@
+.gateway-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f6f8fa;
+}
+
+.gateway-card {
+  width: 400px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.gateway-header {
+  margin-bottom: 20px;
+}
+
+.gateway-logo {
+  width: 120px;
+  margin-bottom: 10px;
+}
+
+.gateway-title {
+  font-size: 18px;
+  color: #333333;
+  font-weight: bold;
+}
+
+.gateway-body {
+  margin: 20px 0;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.payment-info {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.payment-info ul {
+  list-style-type: none;
+  padding: 0;
+  font-size: 14px;
+  color: #555555;
+}
+
+.payment-info li {
+  margin-bottom: 8px;
+}
+
+.gateway-footer {
+  margin-top: 20px;
+}
+
+.gateway-btn {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 12px 0;
+  font-size: 16px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.gateway-btn.btn-primary {
+  background-color: #0070ba;
+  color: #ffffff;
+  border: none;
+}
+
+.gateway-btn.btn-primary:hover {
+  background-color: #005c9e;
+}
+
+.gateway-btn.btn-secondary {
+  background-color: #e7e9ec;
+  color: #333333;
+  border: none;
+}
+
+.gateway-btn.btn-secondary:hover {
+  background-color: #d6d8db;
+}

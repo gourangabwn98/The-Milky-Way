@@ -195,7 +195,7 @@ const HomePage = () => {
                 }}
               >
                 <img
-                  src={require("https://img.freepik.com/free-vector/milk-bottle_1020-433.jpg")}
+                  src="https://img.freepik.com/free-vector/milk-bottle_1020-433.jpg"
                   className="card-img-top"
                   alt={p.name}
                   style={{
@@ -263,7 +263,7 @@ const HomePage = () => {
                   setPage(page + 1);
                 }}
                 style={{
-                  backgroundColor: "#007bff",
+                  backgroundColor: "#DCDCDC",
                   color: "#fff",
                   padding: "10px 20px",
                   border: "none",

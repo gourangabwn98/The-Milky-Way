@@ -35,9 +35,10 @@ const CartPage = () => {
   //detele item
   const removeCartItem = (pid) => {
     try {
-      let myCart = [...cart];
-      let index = myCart.findIndex((item) => item._id === pid);
-      myCart.splice(index, 1);
+      // Filter out the item with the matching _id
+      let myCart = cart.filter((item) => item._id !== pid);
+
+      // Update the state and localStorage
       setCart(myCart);
       localStorage.setItem("cart", JSON.stringify(myCart));
     } catch (error) {
@@ -141,6 +142,12 @@ const CartPage = () => {
                       onClick={() => navigate("/dashboard/user/profile")}
                     >
                       Update Address
+                    </button>
+                    <button
+                      className="btn btn-outline-warning ml-3"
+                      onClick={() => navigate("/gateway")}
+                    >
+                      Payment here
                     </button>
                   </div>
                 </>
