@@ -123,13 +123,17 @@ const Header = () => {
               </>
             )}
 
-            <li className="nav-item">
-              <NavLink to="/cart" className="nav-link">
-                <Badge count={cart?.length} showZero offset={[10, -5]}>
-                  Cart
-                </Badge>
-              </NavLink>
-            </li>
+            {auth?.user?.role === 0 && (
+              <>
+                <li className="nav-item">
+                  <NavLink to="/cart" className="nav-link">
+                    <Badge count={cart?.length} showZero offset={[10, -5]}>
+                      Cart
+                    </Badge>
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

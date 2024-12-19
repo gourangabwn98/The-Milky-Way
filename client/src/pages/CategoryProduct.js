@@ -99,7 +99,7 @@ const CategoryProduct = () => {
         <div className="row col-md-14 ">
           {/* Filter Section */}
           <div
-            className="col-md-3 filters"
+            className="col-md-3  filters"
             style={{
               border: "1px solid #ddd",
               padding: "20px",

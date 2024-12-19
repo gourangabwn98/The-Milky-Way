@@ -1,12 +1,13 @@
 import express from "express";
 import {
   createOrder,
-  getOrders,
+  getAllOrders,
   updateOrderStatus,
   getUserOrders,
 } from "../controllers/orderController.js";
 
 import {
+  isAdmin,
   requireSignIn,
   verifyOrderAccess,
 } from "../middlewares/authMiddleware.js";
@@ -17,10 +18,11 @@ const router = express.Router();
 router.post("/create", requireSignIn, createOrder);
 
 // Route to get all orders (admin-level)
-router.get("/", requireSignIn, getOrders);
+
+router.get("/all-orders", requireSignIn, isAdmin, getAllOrders);
 
 // Route to update an order's status
-router.put("/:orderId/status", requireSignIn, updateOrderStatus);
+router.put("/status/:orderId", requireSignIn, isAdmin, updateOrderStatus);
 
 // Route to get orders for the logged-in user
 router.get("/user/:buyerId", requireSignIn, verifyOrderAccess, getUserOrders);

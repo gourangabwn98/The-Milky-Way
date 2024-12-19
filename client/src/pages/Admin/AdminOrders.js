@@ -5,6 +5,7 @@ import AdminMenu from "../../components/Layout/AdminMenu";
 import Layout from "../../components/Layout/Layout";
 import { useAuth } from "../../context/auth";
 import moment from "moment";
+
 import { Select } from "antd";
 const { Option } = Select;
 
@@ -21,7 +22,7 @@ const AdminOrders = () => {
   const [auth, setAuth] = useAuth();
   const getOrders = async () => {
     try {
-      const { data } = await axios.get("/api/v1/auth/all-orders");
+      const { data } = await axios.get("/api/v1/order/all-orders");
       setOrders(data);
     } catch (error) {
       console.log(error);
@@ -34,9 +35,11 @@ const AdminOrders = () => {
 
   const handleChange = async (orderId, value) => {
     try {
-      const { data } = await axios.put(`/api/v1/auth/order-status/${orderId}`, {
+      const { data } = await axios.put(`/api/v1/order/status/${orderId}`, {
         status: value,
       });
+      console.log("data", data);
+      toast.success(data.message);
       getOrders();
     } catch (error) {
       console.log(error);
@@ -50,7 +53,7 @@ const AdminOrders = () => {
         </div>
         <div className="col-md-9">
           <h1 className="text-center">All Orders</h1>
-          {orders?.map((o, i) => {
+          {/* {orders?.map((o, i) => {
             return (
               <div className="border shadow">
                 <table className="table">
@@ -80,10 +83,10 @@ const AdminOrders = () => {
                           ))}
                         </Select>
                       </td>
-                      <td>{o?.buyer?.name}</td>
-                      <td>{moment(o?.createAt).fromNow()}</td>
+                      <td>{o?.buyer?.name || "N/A"}</td>
+                      <td>{moment(o?.createdAt).fromNow()}</td>
                       <td>{o?.payment.success ? "Success" : "Failed"}</td>
-                      <td>{o?.products?.length}</td>
+                      <td>{o?.products?.length || 0}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -109,7 +112,7 @@ const AdminOrders = () => {
                 </div>
               </div>
             );
-          })}
+          })} */}
         </div>
       </div>
     </Layout>

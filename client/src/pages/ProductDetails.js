@@ -5,12 +5,14 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "../styles/ProductDetailsStyles.css";
 import toast from "react-hot-toast";
 import { useCart } from "../context/cart";
+import { useAuth } from "../context/auth";
 import BannerSlider from "../components/slider";
 
 const ProductDetails = () => {
   // const location = useLocation();
   // const cart = location.state || {};
   // const { setCart } = location.state || {};
+  const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
 
   const params = useParams();
@@ -70,16 +72,28 @@ const ProductDetails = () => {
             })}
           </h6>
           <h6>Category : {product?.category?.name}</h6>
-          <button
-            class="btn btn-secondary ms-1"
-            onClick={() => {
-              setCart([...cart, product]);
-              localStorage.setItem("cart", JSON.stringify([...cart, product]));
-              toast.success("Item Added to cart");
-            }}
-          >
-            ADD TO CART
-          </button>
+          {auth?.user?.role === 0 ? (
+            <>
+              <button
+                class="btn btn-secondary ms-1"
+                onClick={() => {
+                  setCart([...cart, product]);
+                  localStorage.setItem(
+                    "cart",
+                    JSON.stringify([...cart, product])
+                  );
+                  toast.success("Item Added to cart");
+                }}
+              >
+                ADD TO CART
+              </button>
+            </>
+          ) : (
+            <>
+              {" "}
+              <button class="btn btn-secondary ms-1">Edit</button>
+            </>
+          )}
         </div>
       </div>
       <hr />

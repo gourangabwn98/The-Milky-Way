@@ -26,7 +26,7 @@ export const createCategoryController = async (req, res) => {
     console.log(error);
     res.status(500).send({
       success: false,
-      errro,
+      error,
       message: "Errro in Category",
     });
   }
@@ -61,9 +61,11 @@ export const updateCategoryController = async (req, res) => {
 export const categoryControlller = async (req, res) => {
   try {
     const category = await categoryModel.find({});
+    const TotalCategory = category.length;
     res.status(200).send({
       success: true,
       message: "All Categories List",
+      TotalCategory,
       category,
     });
   } catch (error) {

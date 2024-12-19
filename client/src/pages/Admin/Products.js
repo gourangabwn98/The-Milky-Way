@@ -55,7 +55,6 @@ const Products = () => {
                         height: "auto",
                       }}
                     /> */}
-                    <p>sss</p>
                   </div>
 
                   <div className="card-body">

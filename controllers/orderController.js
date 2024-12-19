@@ -27,15 +27,26 @@ export const createOrder = async (req, res) => {
 };
 
 // Get all orders
-export const getOrders = async (req, res) => {
+export const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find({})
-      .populate("products")
-      .populate("buyer", "name email")
-      .exec();
-    res.status(200).send(orders);
+      .populate("products", "-photo")
+      .populate("buyer", "name")
+      .sort({ createdAt: "-1" });
+    const TotalOrders = orders.length;
+    res.status(200).send({
+      success: true,
+      message: "All Orders fetched successfully",
+      TotalOrders,
+      orders,
+    });
   } catch (error) {
-    res.status(500).send({ error: "Failed to fetch orders" });
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error WHile Geting Orders",
+      error,
+    });
   }
 };
 
@@ -71,10 +82,11 @@ export const getUserOrders = async (req, res) => {
       .populate("products", "name price")
       .populate("buyer", "name email")
       .exec();
-
+    const totalOrders = orders.length;
     res.status(200).send({
       success: true,
       message: "User orders fetched successfully",
+      totalOrders,
       orders,
     });
   } catch (error) {

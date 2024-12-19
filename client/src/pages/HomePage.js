@@ -9,8 +9,12 @@ import Layout from "./../components/Layout/Layout";
 import { AiOutlineReload } from "react-icons/ai";
 import "../styles/Homepage.css";
 import BannerSlider from "../components/slider";
+import { useAuth } from "../context/auth";
+import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const HomePage = () => {
+  const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
   const [cart, setCart] = useCart();
   const [products, setProducts] = useState([]);
@@ -20,11 +24,16 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  // for count
+  const [allUsers, setAllUsers] = useState([]);
+  const [allCategory, setAllCategory] = useState([]);
+  const [allOrders, setAllOrders] = useState([]);
 
   // Fetch all categories
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/get-category");
+      setAllCategory(data?.TotalCategory);
       if (data?.success) {
         setCategories(data?.category);
       }
@@ -33,9 +42,34 @@ const HomePage = () => {
     }
   };
 
+  // fetch all users
+  const fetchUsers = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:8080/api/v1/auth/all-users"
+      );
+
+      setAllUsers(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // fatch all order
+  const getTotalOrders = async () => {
+    try {
+      const { data } = await axios.get("/api/v1/order/all-orders");
+      setAllOrders(data.TotalOrders);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getAllCategory();
     getTotal();
+    getTotalOrders();
+    fetchUsers();
   }, []);
 
   // Fetch all products
@@ -114,19 +148,266 @@ const HomePage = () => {
   return (
     <Layout title={"All Products - Best Offers"}>
       {/* Banner */}
-      <div style={{ marginBottom: "20px" }}>
-        <BannerSlider />
-      </div>
+      {auth?.user?.role == 1 ? (
+        <div
+          style={{
+            width: "100%",
+            backgroundColor: "#F0F8FF",
+            display: "flex",
+            padding: 12,
+            marginTop: "63px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          className="row "
+        >
+          <div className="col-md-4 mt-0 mb-3 gx-3 gy-3">
+            <div
+              className="card text-center shadow"
+              style={{
+                padding: "20px",
+                borderRadius: "8px",
+                backgroundColor: "#f8f9fa",
+                marginBottom: "20px",
+              }}
+            >
+              {/* Display Value */}
+              <h1
+                style={{
+                  fontSize: "48px",
+                  fontWeight: "bold",
+                  color: "black",
+                  marginBottom: "10px",
+                }}
+              >
+                135
+              </h1>
+              {/* Button */}
+              <NavLink
+                to="/dashboard/admin/orders"
+                className="btn cat-btn"
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  textDecoration: "none",
+                }}
+              >
+                Today Order
+              </NavLink>
+            </div>
+          </div>
+          <div className="col-md-4 mt-0 mb-3 gx-3 gy-3">
+            <div
+              className="card text-center shadow"
+              style={{
+                padding: "20px",
+                borderRadius: "8px",
+                backgroundColor: "#f8f9fa",
+                marginBottom: "20px",
+              }}
+            >
+              {/* Display Value */}
+              <h1
+                style={{
+                  fontSize: "48px",
+                  fontWeight: "bold",
+                  color: "black",
+                  marginBottom: "10px",
+                }}
+              >
+                {allOrders}
+              </h1>
+              {/* Button */}
+              <NavLink
+                to="/dashboard/admin/orders"
+                className="btn cat-btn"
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  textDecoration: "none",
+                }}
+              >
+                All Order
+              </NavLink>
+            </div>
+          </div>
+          <div className="col-md-4 mt-0 mb-3 gx-3 gy-3">
+            <div
+              className="card text-center shadow"
+              style={{
+                padding: "20px",
+                borderRadius: "8px",
+                backgroundColor: "#f8f9fa",
+                marginBottom: "20px",
+              }}
+            >
+              {/* Display Value */}
+              <h1
+                style={{
+                  fontSize: "48px",
+                  fontWeight: "bold",
+                  color: "black",
+                  marginBottom: "10px",
+                }}
+              >
+                170
+              </h1>
+              {/* Button */}
+              <NavLink
+                to="/dashboard/admin/products"
+                className="btn cat-btn"
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  textDecoration: "none",
+                }}
+              >
+                All Products
+              </NavLink>
+            </div>
+          </div>
+          <div className="col-md-4 mt-0 mb-3 gx-3 gy-3">
+            <div
+              className="card text-center shadow"
+              style={{
+                padding: "20px",
+                borderRadius: "8px",
+                backgroundColor: "#f8f9fa",
+                marginBottom: "20px",
+              }}
+            >
+              {/* Display Value */}
+              <h1
+                style={{
+                  fontSize: "48px",
+                  fontWeight: "bold",
+                  color: "black",
+                  marginBottom: "10px",
+                }}
+              >
+                {allCategory}
+              </h1>
+              {/* Button */}
+              <NavLink
+                to="/dashboard/admin/create-category"
+                className="btn cat-btn"
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  textDecoration: "none",
+                }}
+              >
+                Create Category
+              </NavLink>
+            </div>
+          </div>
+          <div className="col-md-4 mt-0 mb-3 gx-3 gy-3">
+            <div
+              className="card text-center shadow"
+              style={{
+                padding: "20px",
+                borderRadius: "8px",
+                backgroundColor: "#f8f9fa",
+                marginBottom: "20px",
+              }}
+            >
+              {/* Display Value */}
+              <h1
+                style={{
+                  fontSize: "48px",
+                  fontWeight: "bold",
+                  color: "black",
+                  marginBottom: "10px",
+                }}
+              >
+                Rs : 135
+              </h1>
+              {/* Button */}
+              <Link
+                className="btn cat-btn"
+                style={{
+                  backgroundColor: "#228B22",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  textDecoration: "none",
+                }}
+                to="/today-orders"
+              >
+                Recived Money
+              </Link>
+            </div>
+          </div>
+          <div className="col-md-4 mt-0 mb-3 gx-3 gy-3">
+            <div
+              className="card text-center shadow"
+              style={{
+                padding: "20px",
+                borderRadius: "8px",
+                backgroundColor: "#f8f9fa",
+                marginBottom: "20px",
+              }}
+            >
+              {/* Display Value */}
+              <h1
+                style={{
+                  fontSize: "48px",
+                  fontWeight: "bold",
+                  color: "black",
+                  marginBottom: "10px",
+                }}
+              >
+                {allUsers.length}
+              </h1>
+              {/* Button */}
+              <NavLink
+                to="/dashboard/admin/users"
+                className="btn cat-btn"
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  textDecoration: "none",
+                }}
+              >
+                All Customer
+              </NavLink>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div style={{ marginBottom: "20px" }}>
+            <BannerSlider />
+          </div>
+        </>
+      )}
 
       {/* Filters and Products */}
       <div
-        className="container-fluid row mt-4 home-page"
-        style={{ display: "flex", flexWrap: "wrap" }}
+        className="container-fluid  row mt-4 home-page"
+        // style={{ display: "flex", flexWrap: "wrap" }}
       >
         {/* Filter Section */}
         <div
           className="col-md-3 filters"
           style={{
+            backgroundColor: "#F0F8FF",
             border: "1px solid #ddd",
             padding: "20px",
             borderRadius: "8px",
@@ -171,7 +452,7 @@ const HomePage = () => {
         </div>
 
         {/* Product Section */}
-        <div className="col-md-9">
+        <div style={{ backgroundColor: "#F0F8FF" }} className="col-md-9">
           <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
             All Products
           </h1>
@@ -235,20 +516,25 @@ const HomePage = () => {
                     >
                       More Details
                     </button>
-                    <button
-                      className="btn btn-dark"
-                      onClick={() => {
-                        setCart([...cart, p]);
-                        localStorage.setItem(
-                          "cart",
-                          JSON.stringify([...cart, p])
-                        );
-                        toast.success("Item Added to cart");
-                      }}
-                      style={{ flex: 1 }}
-                    >
-                      ADD TO CART
-                    </button>
+                    {auth?.user?.role != 1 && (
+                      <>
+                        {" "}
+                        <button
+                          className="btn btn-dark"
+                          onClick={() => {
+                            setCart([...cart, p]);
+                            localStorage.setItem(
+                              "cart",
+                              JSON.stringify([...cart, p])
+                            );
+                            toast.success("Item Added to cart");
+                          }}
+                          style={{ flex: 1 }}
+                        >
+                          ADD TO CART
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
