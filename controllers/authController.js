@@ -220,6 +220,13 @@ export const getOrdersController = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
     const user = await userModel.find({});
+    const TotalUser = user.length;
+    res.status(200).send({
+      success: true,
+      message: "All User  fetched successfully",
+      TotalUser,
+      user,
+    });
 
     res.json(user);
   } catch (error) {

@@ -72,7 +72,7 @@ export const getProductController = async (req, res) => {
       .sort({ createdAt: -1 });
     res.status(200).send({
       success: true,
-      counTotal: products.length,
+      TotalProduct: products.length,
       message: "ALlProducts ",
       products,
     });

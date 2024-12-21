@@ -12,11 +12,13 @@ import BannerSlider from "../components/slider";
 import { useAuth } from "../context/auth";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { useUser } from "../context/User";
 
 const HomePage = () => {
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
   const [cart, setCart] = useCart();
+  const [user, setUser] = useUser();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
@@ -25,9 +27,14 @@ const HomePage = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   // for count
-  const [allUsers, setAllUsers] = useState([]);
-  const [allCategory, setAllCategory] = useState([]);
+  // const [allUsers, setAllUsers] = useState();
+  const [allCategory, setAllCategory] = useState();
   const [allOrders, setAllOrders] = useState([]);
+  const [totalProducts, setTotalProduct] = useState();
+
+  // const[]
+  console.log("cart", cart);
+  // console.log("user", user);
 
   // Fetch all categories
   const getAllCategory = async () => {
@@ -42,24 +49,33 @@ const HomePage = () => {
     }
   };
 
-  // fetch all users
-  const fetchUsers = async () => {
-    try {
-      const { data } = await axios.get(
-        "http://localhost:8080/api/v1/auth/all-users"
-      );
+  // // fetch all users
+  // const fetchUsers = async () => {
+  //   try {
+  //     const { data } = await axios.get("/api/v1/auth/all-users");
 
-      setAllUsers(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setAllUsers(data?.TotalUser);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // fatch all order
   const getTotalOrders = async () => {
     try {
       const { data } = await axios.get("/api/v1/order/all-orders");
-      setAllOrders(data.TotalOrders);
+      setAllOrders(data?.TotalOrders);
+      console.log("allOrders", allOrders);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // fetch all products
+  const fetchAllProducts = async () => {
+    try {
+      const { data } = await axios.get("/api/v1/product/get-product");
+      setTotalProduct(data?.TotalProduct);
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +85,8 @@ const HomePage = () => {
     getAllCategory();
     getTotal();
     getTotalOrders();
-    fetchUsers();
+    // fetchUsers();
+    fetchAllProducts();
   }, []);
 
   // Fetch all products
@@ -218,7 +235,7 @@ const HomePage = () => {
                   marginBottom: "10px",
                 }}
               >
-                {allOrders}
+                {allOrders || 0}
               </h1>
               {/* Button */}
               <NavLink
@@ -256,7 +273,7 @@ const HomePage = () => {
                   marginBottom: "10px",
                 }}
               >
-                170
+                {totalProducts || 0}
               </h1>
               {/* Button */}
               <NavLink
@@ -294,7 +311,7 @@ const HomePage = () => {
                   marginBottom: "10px",
                 }}
               >
-                {allCategory}
+                {allCategory || 0}
               </h1>
               {/* Button */}
               <NavLink
@@ -370,7 +387,8 @@ const HomePage = () => {
                   marginBottom: "10px",
                 }}
               >
-                {allUsers.length}
+                {/* {allUsers || 0} */}
+                34
               </h1>
               {/* Button */}
               <NavLink
