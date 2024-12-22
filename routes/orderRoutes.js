@@ -4,6 +4,7 @@ import {
   getAllOrders,
   updateOrderStatus,
   getUserOrders,
+  getUserOrdersfromAdmin,
 } from "../controllers/orderController.js";
 
 import {
@@ -26,5 +27,7 @@ router.put("/status/:orderId", requireSignIn, isAdmin, updateOrderStatus);
 
 // Route to get orders for the logged-in user
 router.get("/user/:buyerId", requireSignIn, verifyOrderAccess, getUserOrders);
+// this is for admin for count user order individually
+router.get("/:buyerId", requireSignIn, getUserOrdersfromAdmin);
 
 export default router;

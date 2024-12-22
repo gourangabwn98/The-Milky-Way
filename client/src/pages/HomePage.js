@@ -12,13 +12,14 @@ import BannerSlider from "../components/slider";
 import { useAuth } from "../context/auth";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { useUser } from "../context/User";
+import moment from "moment";
+// import { useUser } from "../context/User";
 
 const HomePage = () => {
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
   const [cart, setCart] = useCart();
-  const [user, setUser] = useUser();
+
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
@@ -27,14 +28,16 @@ const HomePage = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   // for count
-  // const [allUsers, setAllUsers] = useState();
+
   const [allCategory, setAllCategory] = useState();
-  const [allOrders, setAllOrders] = useState([]);
+  const [allOrders, setAllOrders] = useState();
   const [totalProducts, setTotalProduct] = useState();
+  const [allUsers, setAllUsers] = useState();
+  const [totalPay, setTotalPay] = useState();
+  const [todayOrder, setTodayOrder] = useState();
 
   // const[]
   console.log("cart", cart);
-  // console.log("user", user);
 
   // Fetch all categories
   const getAllCategory = async () => {
@@ -49,23 +52,36 @@ const HomePage = () => {
     }
   };
 
-  // // fetch all users
-  // const fetchUsers = async () => {
-  //   try {
-  //     const { data } = await axios.get("/api/v1/auth/all-users");
+  // fetch all users
+  const fetchUsers = async () => {
+    try {
+      const { data } = await axios.get("/api/v1/auth/all-users");
 
-  //     setAllUsers(data?.TotalUser);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+      setAllUsers(data.TotalUser);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // fatch all order
   const getTotalOrders = async () => {
     try {
       const { data } = await axios.get("/api/v1/order/all-orders");
-      setAllOrders(data?.TotalOrders);
-      console.log("allOrders", allOrders);
+      setAllOrders(data?.TotalOrders || 0);
+      // count total payment
+      const totalPayment = data?.orders.reduce((sum, order) => {
+        return sum + (order.payment?.amount || 0);
+      }, 0);
+      setTotalPay(totalPayment);
+
+      //today order count
+      const todayOrder = data?.orders.filter((order) => {
+        const orderDate = moment(order.createdAt).format("YYYY-MM-DD");
+        const todayDate = moment().format("YYYY-MM-DD");
+        return orderDate === todayDate;
+      });
+      setTodayOrder(todayOrder.length);
+      console.log("Today's Order Count:", todayOrder);
     } catch (error) {
       console.log(error);
     }
@@ -80,13 +96,25 @@ const HomePage = () => {
       console.log(error);
     }
   };
+  console.log("AllUsers", allUsers);
 
   useEffect(() => {
-    getAllCategory();
-    getTotal();
-    getTotalOrders();
-    // fetchUsers();
-    fetchAllProducts();
+    //here initializeData  call because so many function are call but its not handel all of this in one time
+    const initializeData = async () => {
+      try {
+        await Promise.all([
+          getTotalOrders(),
+          fetchUsers(),
+          getAllCategory(),
+          getTotal(),
+          fetchAllProducts(),
+        ]);
+      } catch (error) {
+        console.error("Error initializing data:", error);
+      }
+    };
+
+    initializeData();
   }, []);
 
   // Fetch all products
@@ -197,7 +225,7 @@ const HomePage = () => {
                   marginBottom: "10px",
                 }}
               >
-                135
+                {todayOrder || 0}
               </h1>
               {/* Button */}
               <NavLink
@@ -349,7 +377,7 @@ const HomePage = () => {
                   marginBottom: "10px",
                 }}
               >
-                Rs : 135
+                Rs : {totalPay}
               </h1>
               {/* Button */}
               <Link
@@ -387,8 +415,7 @@ const HomePage = () => {
                   marginBottom: "10px",
                 }}
               >
-                {/* {allUsers || 0} */}
-                34
+                {allUsers || 0}
               </h1>
               {/* Button */}
               <NavLink

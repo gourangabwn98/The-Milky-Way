@@ -10,20 +10,19 @@ const Users = () => {
   // Fetch all users and their order count
   const fetchUsers = async () => {
     try {
-      const { data: userData } = await axios.get(
-        "http://localhost:8080/api/v1/auth/all-users"
-      );
+      const { data: userData } = await axios.get("/api/v1/auth/all-users");
+      console.log("Users fetched:", userData.user);
 
       const usersWithOrders = await Promise.all(
-        userData.map(async (user) => {
+        userData.user.map(async (user) => {
           try {
             // Fetch order count for each user dynamically
             const { data: orderData } = await axios.get(
-              `http://localhost:8080/api/v1/order/user/${user._id}`
+              `/api/v1/order/${user._id}`
             );
-            console.log("c", orderData.data.totalOrders);
+            console.log("Orders fetched for user:", orderData);
 
-            return { ...user, orderCount: orderData.data.totalOrders || 0 };
+            return { ...user, orderCount: orderData.totalOrders || 0 };
           } catch (orderError) {
             console.error(
               `Error fetching orders for user ${user._id}:`,
@@ -34,7 +33,12 @@ const Users = () => {
         })
       );
 
-      setUsers(usersWithOrders);
+      // Sort users by orderCount in descending order
+      const sortedUsers = usersWithOrders.sort(
+        (a, b) => b.orderCount - a.orderCount
+      );
+
+      setUsers(sortedUsers);
     } catch (error) {
       console.error("Error fetching users:", error);
       toast.error("Failed to load users");

@@ -23,7 +23,8 @@ const AdminOrders = () => {
   const getOrders = async () => {
     try {
       const { data } = await axios.get("/api/v1/order/all-orders");
-      setOrders(data);
+      console.log(data?.orders);
+      setOrders(data?.orders || []);
     } catch (error) {
       console.log(error);
     }
@@ -59,12 +60,13 @@ const AdminOrders = () => {
                 <table className="table">
                   <thead>
                     <tr>
-                      <th scope="col">#</th>
+                      <th scope="col"># {o?._id}</th>
                       <th scope="col">Status</th>
                       <th scope="col">Buyer</th>
                       <th scope="col"> date</th>
                       <th scope="col">Payment</th>
                       <th scope="col">Quantity</th>
+                      <th scope="col">Total(Rupees)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -87,19 +89,20 @@ const AdminOrders = () => {
                       <td>{moment(o?.createdAt).fromNow()}</td>
                       <td>{o?.payment.success ? "Success" : "Failed"}</td>
                       <td>{o?.products?.length || 0}</td>
+                      <td className="color-green">{o?.payment?.amount || 0}</td>
                     </tr>
                   </tbody>
                 </table>
                 <div className="container">
                   {o?.products?.map((p, i) => (
                     <div className="row mb-2 p-3 card flex-row" key={p._id}>
-                      <div className="col-md-4">
+                      <div className="col-md-2">
                         <img
-                          src={`/api/v1/product/product-photo/${p._id}`}
+                          src="/images/product/product.jpg"
                           className="card-img-top"
                           alt={p.name}
-                          width="100px"
-                          height={"100px"}
+                          width="80px"
+                          height="140px"
                         />
                       </div>
                       <div className="col-md-8">

@@ -68,7 +68,7 @@ export const updateOrderStatus = async (req, res) => {
 
     res
       .status(200)
-      .send({ message: "Order status updated", order: updatedOrder });
+      .send({ message: `Order ${status} updated`, order: updatedOrder });
   } catch (error) {
     res.status(500).send({ error: "Failed to update order status" });
   }
@@ -82,6 +82,29 @@ export const getUserOrders = async (req, res) => {
       .populate("products", "name price")
       .populate("buyer", "name email")
       .exec();
+    const totalOrders = orders.length;
+    res.status(200).send({
+      success: true,
+      message: "User orders fetched successfully",
+      totalOrders,
+      orders,
+    });
+  } catch (error) {
+    console.log("Error fetching user orders:", error);
+    res.status(500).send({
+      success: false,
+      message: "Failed to fetch user orders",
+      error,
+    });
+  }
+};
+
+export const getUserOrdersfromAdmin = async (req, res) => {
+  try {
+    const { buyerId } = req.params;
+
+    const orders = await Order.find({ buyer: buyerId });
+
     const totalOrders = orders.length;
     res.status(200).send({
       success: true,
