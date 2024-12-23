@@ -46,7 +46,7 @@ export const createProductController = async (req, res) => {
     // Create Product
     const product = new productModel({
       name,
-      // slug: slugify(name),
+      slug: slugify(name),
       description,
       price,
       category,
@@ -215,8 +215,10 @@ export const productFiltersController = async (req, res) => {
     if (checked.length > 0) args.category = checked;
     if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
     const products = await productModel.find(args);
+    const Total_filterProduct = products.length;
     res.status(200).send({
       success: true,
+      Total_filterProduct,
       products,
     });
   } catch (error) {
@@ -232,10 +234,12 @@ export const productFiltersController = async (req, res) => {
 // product count
 export const productCountController = async (req, res) => {
   try {
-    const total = await productModel.find({}).estimatedDocumentCount();
+    const all_product = await productModel.find({});
+    const Total_product = all_product.length;
     res.status(200).send({
       success: true,
-      total,
+      Total_product,
+      all_product,
     });
   } catch (error) {
     console.log(error);
@@ -258,8 +262,10 @@ export const productListController = async (req, res) => {
       .skip((page - 1) * perPage)
       .limit(perPage)
       .sort({ createdAt: -1 });
+    const Total_Product_this_Page = products.length;
     res.status(200).send({
       success: true,
+      Total_Product_this_Page,
       products,
     });
   } catch (error) {
@@ -362,10 +368,11 @@ export const brainTreePaymentController = async (req, res) => {
   try {
     const { nonce, cart } = req.body;
     let total = 0;
-    cart.map((i) => {
-      total += i.price;
+    cart.forEach((item) => {
+      total += item.price;
     });
-    let newTransaction = gateway.transaction.sale(
+
+    gateway.transaction.sale(
       {
         amount: total,
         paymentMethodNonce: nonce,
@@ -373,20 +380,36 @@ export const brainTreePaymentController = async (req, res) => {
           submitForSettlement: true,
         },
       },
-      function (error, result) {
-        if (result) {
-          const order = new orderModel({
-            products: cart,
-            payment: result,
-            buyer: req.user._id,
-          }).save();
-          res.json({ ok: true });
+      async (error, result) => {
+        if (error) {
+          console.log("Payment Error:", error);
+          return res.status(500).json({ success: false, error });
+        }
+
+        if (result.success) {
+          try {
+            const order = await new orderModel({
+              products: cart,
+              payment: result,
+              buyer: req.user._id,
+            }).save();
+
+            return res.status(200).json({ success: true, order });
+          } catch (dbError) {
+            console.log("Database Error:", dbError);
+            return res.status(500).json({ success: false, error: dbError });
+          }
         } else {
-          res.status(500).send(error);
+          return res
+            .status(400)
+            .json({ success: false, message: "Payment failed", result });
         }
       }
     );
   } catch (error) {
-    console.log(error);
+    console.log("Unexpected Error:", error);
+    res
+      .status(500)
+      .json({ success: false, error, message: "Unexpected error occurred" });
   }
 };

@@ -36,29 +36,72 @@ const CreateProduct = () => {
   }, []);
 
   //create product function
+  // const handleCreate = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const productData = new FormData();
+  //     productData.append("name", name);
+  //     productData.append("description", description);
+  //     productData.append("price", price);
+  //     productData.append("quantity", quantity);
+  //     productData.append("photo", photo);
+  //     productData.append("category", category);
+  //     console.log("productData", productData);
+  //     // Await the axios post request
+  //     const { data } = await axios.post(
+  //       "/api/v1/product/create-product",
+  //       productData
+  //     );
+
+  //     console.log("data", data); // Log the API response
+  //     console.log("productData", [...productData.entries()]); // Log FormData content
+
+  //     if (data?.success) {
+  //       toast.success("Product Created Successfully");
+  //       // navigate("/dashboard/admin/products");
+  //     } else {
+  //       toast.error(data?.message || "Failed to create product");
+  //     }
+  //   } catch (error) {
+  //     console.log("Error:", error.response?.data || error.message);
+  //     toast.error("Something went wrong");
+  //   }
+  // };
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      const productData = new FormData();
-      productData.append("name", name);
-      productData.append("description", description);
-      productData.append("price", price);
-      productData.append("quantity", quantity);
-      productData.append("photo", photo);
-      productData.append("category", category);
-      const { data } = axios.post(
+      // Create the product object
+      const productData = {
+        name,
+        description,
+        price,
+        quantity,
+        category,
+        photo, // If your backend supports photo as a Base64 string or file path
+      };
+
+      console.log("Product Data Object:", productData); // Log the product object
+
+      // Make the POST request with JSON payload
+      const { data } = await axios.post(
         "/api/v1/product/create-product",
-        productData
+        productData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
+      console.log(" Data :", data);
       if (data?.success) {
-        toast.error(data?.message);
-      } else {
         toast.success("Product Created Successfully");
         navigate("/dashboard/admin/products");
+      } else {
+        toast.error(data?.message || "Failed to create product");
       }
     } catch (error) {
-      console.log(error);
-      toast.error("something went wrong");
+      console.log("Error:", error.response?.data || error.message);
+      toast.error("Something went wrong");
     }
   };
 
