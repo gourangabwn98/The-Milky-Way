@@ -7,6 +7,7 @@ import JWT from "jsonwebtoken";
 export const registerController = async (req, res) => {
   try {
     const { name, email, password, phone, address, answer } = req.body;
+    let input_answer = answer.toLowerCase();
     //validations
     if (!name) {
       return res.send({ error: "Name is Required" });
@@ -26,6 +27,8 @@ export const registerController = async (req, res) => {
 
     //check user
     const exisitingUser = await userModel.findOne({ email });
+    // console.log("exisitingUser", exisitingUser);
+
     //exisiting user
     if (exisitingUser) {
       return res.status(200).send({
@@ -35,6 +38,7 @@ export const registerController = async (req, res) => {
     }
     //register user
     const hashedPassword = await hashPassword(password);
+    // console.log("hashedPassword", hashedPassword);
     //save
     const user = await new userModel({
       name,
@@ -42,9 +46,9 @@ export const registerController = async (req, res) => {
       phone,
       address,
       password: hashedPassword,
-      answer,
+      answer: input_answer,
     }).save();
-
+    console.log("user", user);
     res.status(201).send({
       success: true,
       message: "User Register Successfully",
@@ -134,12 +138,23 @@ export const forgotPasswordController = async (req, res) => {
       res.status(400).send({ message: "New Password is required" });
     }
     //check
-    const user = await userModel.findOne({ email, answer });
+    const user = await userModel.findOne({ email });
+    console.log(user);
+
     //validation
     if (!user) {
       return res.status(404).send({
         success: false,
-        message: "Wrong Email Or Answer",
+        message: "Wrong Email",
+      });
+    }
+
+    let input_answer = answer.toLowerCase();
+
+    if (user.answer != input_answer) {
+      return res.status(404).send({
+        success: false,
+        message: "Wrong answer",
       });
     }
     const hashed = await hashPassword(newPassword);

@@ -5,6 +5,9 @@ import { Checkbox, Radio } from "antd"; // Importing Ant Design components
 import "../styles/CategoryProductStyles.css";
 import axios from "axios";
 import BannerSlider from "../components/slider";
+import toast from "react-hot-toast";
+import { useCart } from "../context/cart";
+import { useAuth } from "../context/auth";
 
 const Prices = [
   { _id: 0, name: "Any", array: [] },
@@ -22,6 +25,8 @@ const CategoryProduct = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [radio, setRadio] = useState([]);
+  const [cart, setCart] = useCart();
+  const [auth, setAuth] = useAuth();
 
   // Fetch all categories
   const getCategories = async () => {
@@ -170,12 +175,41 @@ const CategoryProduct = () => {
                     <p className="card-text">
                       {product.description.substring(0, 60)}...
                     </p>
-                    <button
-                      className="btn btn-info"
-                      onClick={() => navigate(`/product/${product.slug}`)}
+
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
                     >
-                      More Details
-                    </button>
+                      <button
+                        className="btn btn-info"
+                        onClick={() => navigate(`/product/${product.slug}`)}
+                        style={{ flex: 1, marginRight: "5px" }}
+                      >
+                        More Details
+                      </button>
+                      {auth?.user?.role != 1 && (
+                        <>
+                          {" "}
+                          <button
+                            className="btn btn-dark"
+                            onClick={() => {
+                              setCart([...cart, product]);
+                              localStorage.setItem(
+                                "cart",
+                                JSON.stringify([...cart, product])
+                              );
+                              toast.success("Item Added to cart");
+                            }}
+                            style={{ flex: 1 }}
+                          >
+                            ADD TO CART
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

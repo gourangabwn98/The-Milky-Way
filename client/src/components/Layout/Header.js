@@ -10,8 +10,9 @@ import "./Header.css"; // Add a CSS file for custom styles
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
-  const [cart] = useCart();
+  const [cart, setCart] = useCart();
   const categories = useCategory();
+  console.log("cart", cart);
 
   const handleLogout = () => {
     setAuth({
@@ -19,7 +20,9 @@ const Header = () => {
       user: null,
       token: "",
     });
+    setCart([]);
     localStorage.removeItem("auth");
+    localStorage.removeItem("cart");
     toast.success("Logout Successfully");
   };
 
@@ -123,7 +126,7 @@ const Header = () => {
               </>
             )}
 
-            {auth?.user?.role === 0 && (
+            {auth?.user?.role != 1 && (
               <>
                 <li className="nav-item">
                   <NavLink to="/cart" className="nav-link">

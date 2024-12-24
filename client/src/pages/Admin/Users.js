@@ -58,15 +58,6 @@ const Users = () => {
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   };
 
-  const headerStyle = {
-    textAlign: "center",
-    marginBottom: "30px",
-    fontSize: "28px",
-    fontWeight: "bold",
-    color: "#2c3e50",
-    letterSpacing: "1px",
-  };
-
   const cardStyle = {
     display: "flex",
     justifyContent: "space-between",
@@ -105,14 +96,15 @@ const Users = () => {
 
   return (
     <Layout title={"Dashboard - All Users"}>
-      <div style={{ margin: "20px" }}>
+      <div style={{ margin: "20px", marginTop: "70px" }}>
         <div className="row">
           <div className="col-md-3">
             <AdminMenu />
           </div>
           <div className="col-md-9">
             <div style={containerStyle}>
-              <h1 style={headerStyle}>All Users</h1>
+              <h1 className="text-center">All Customers</h1>
+
               {users.length > 0 ? (
                 users.map((user, index) => (
                   <div

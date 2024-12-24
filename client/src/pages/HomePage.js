@@ -134,7 +134,8 @@ const HomePage = () => {
   const getTotal = async () => {
     try {
       const { data } = await axios.get("/api/v1/product/product-count");
-      setTotal(data?.total);
+      // console.log("p", data);
+      setTotal(data?.Total_product);
     } catch (error) {
       console.log(error);
     }
@@ -594,7 +595,8 @@ const HomePage = () => {
                   setPage(page + 1);
                 }}
                 style={{
-                  backgroundColor: "#DCDCDC",
+                  width: "100%",
+                  backgroundColor: "DodgerBlue",
                   color: "#fff",
                   padding: "10px 20px",
                   border: "none",

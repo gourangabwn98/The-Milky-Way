@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../../styles/AuthStyles.css";
+import "./Modal.css";
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,10 +13,13 @@ const Register = () => {
   const [address, setAddress] = useState("");
   const [answer, setAnswer] = useState("");
   const navigate = useNavigate();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // form function
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
     try {
       const res = await axios.post("/api/v1/auth/register", {
         name,
@@ -27,13 +31,19 @@ const Register = () => {
       });
       if (res && res.data.success) {
         toast.success(res.data && res.data.message);
-        navigate("/login");
+        setModalVisible(true);
+        setTimeout(() => {
+          setModalVisible(false);
+          navigate("/login");
+        }, 3000);
       } else {
         toast.error(res.data.message);
       }
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -118,10 +128,19 @@ const Register = () => {
             />
           </div>
           <button type="submit" className="btn btn-primary w-100">
-            REGISTER
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
       </div>
+      {/* Modal for 3 seconds */}
+      {modalVisible && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="spinner"></div>
+            <p>Loading...</p>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };

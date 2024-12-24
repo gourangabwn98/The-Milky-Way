@@ -19,6 +19,8 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState({});
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //initalp details
   useEffect(() => {
@@ -91,12 +93,22 @@ const ProductDetails = () => {
           ) : (
             <>
               {" "}
-              <button class="btn btn-secondary ms-1">Edit</button>
+              <button
+                class="btn btn-secondary ms-1"
+                onClick={() =>
+                  setTimeout(() => {
+                    navigate(`/dashboard/admin/product/${product.slug}`);
+                  }, 1000)
+                }
+              >
+                Edit
+              </button>
             </>
           )}
         </div>
       </div>
       <hr />
+
       <div className="row container similar-products">
         <h4>Similar Products ➡️</h4>
         {relatedProducts.length < 1 && (
@@ -130,19 +142,21 @@ const ProductDetails = () => {
                   >
                     More Details
                   </button>
-                  <button
-                    class="btn btn-secondary ms-1"
-                    onClick={() => {
-                      setCart([...cart, product]);
-                      localStorage.setItem(
-                        "cart",
-                        JSON.stringify([...cart, product])
-                      );
-                      toast.success("Item Added to cart");
-                    }}
-                  >
-                    ADD TO CART
-                  </button>
+                  {auth?.user?.role != 1 && (
+                    <button
+                      class="btn btn-secondary ms-1"
+                      onClick={() => {
+                        setCart([...cart, product]);
+                        localStorage.setItem(
+                          "cart",
+                          JSON.stringify([...cart, product])
+                        );
+                        toast.success("Item Added to cart");
+                      }}
+                    >
+                      ADD TO CART
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
